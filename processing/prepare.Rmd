@@ -1,0 +1,24 @@
+---
+title: "conocimiento_civico"
+author: "Anais Herrera Leighton"
+date: "11-12-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(haven)
+library(dplyr)
+iccs_simce <- read_dta("../input/data/original/iccs_simce.dta")
+
+data=iccs_simce %>% select(PV1CIV,S_CITEFF,S_POLDISC,S_SOCMED,L_AUTGOV,S_INTRUST,L_DISLAW,S_GENEQL,S_ETHRGHT,L_ATTDIV,S_ELECPART,S_LEGACT,S_ILLACT) %>% as.data.frame
+summary(data)
+```
+
+```{r}
+save(data, file= "../input/data/proc/data.Rdata")
+```
+
