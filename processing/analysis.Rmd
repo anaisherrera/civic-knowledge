@@ -10,8 +10,11 @@ output: html_document
 pacman::p_load(ggplot2,
                hrbrthemes,
                sjPlot,
-               haven)
+               extrafont,
+               haven,
+               dplyr)
 load(file= "../input/data/proc/data.Rdata")
+load(file= "../input/data/proc/data1.Rdata")
 iccs_simce <- read_dta("../input/data/original/iccs_simce.dta")
 ```
 
@@ -163,3 +166,118 @@ ggsave(plot = plot_grid(list(p1a,p1b,p1c,p2a,p2b,p2c,p3a,p3b,p3c,p4a,p4b,p4c),
        filename = "../output/graphs/general2.png", width = 11, height = 10, dpi= "retina")
 ```
 
+#Nivel educativo
+```{r message=FALSE, warning=FALSE}
+mean_cc <- mean(data1$PV1CIV)
+
+plotdata <- data1 %>%
+  group_by(S_HISCED) %>%
+  summarize(n = n(),
+         mean = mean(PV1CIV),
+         sd = sd(PV1CIV),
+         se = sd / sqrt(n),
+         ci = qt(0.99, df = n - 1) * sd / sqrt(n))
+
+#font_import()
+#loadfonts(device="win")       #Register fonts for Windows bitmap output
+#fonts()                       #vector of font family names
+
+plotdata$S_HISCED <- factor(plotdata$S_HISCED, levels = c(0,1,2,3,4), labels = c("Menor a 6° básico","Entre 6° y menor a 8°", "Ed. media completa","Ed. Superior no universitaria", "Ed. Universitaria y más"))
+plotdata<-na.omit(plotdata)
+
+plot_ed <- ggplot(plotdata, 
+       aes(x = S_HISCED, 
+           y = mean, 
+           group = 1)) +
+  geom_errorbar(aes(ymin = mean - se, 
+                    ymax = mean + se), 
+                width = .05, colour="grey50") +
+  geom_point(shape = 21, colour = "#5A5858", fill = "white", size = 1.8) +
+  geom_hline(yintercept = mean_cc,
+             color = "grey50",
+             linetype = "solid") + 
+  xlab("Niveles de educación familiar CINE") + ylab("Conocimiento cívico")  + ggtitle("CONOCIMIENTO CÍVICO, SEGÚN NIVEL EDUCACIONAL") + theme_classic() +
+    theme(axis.title.x = element_text(hjust = 0.48),
+          axis.text.x = element_text(colour = "black", size = 10, angle = 45, hjust = 1),
+          plot.title = element_text(family="Times New Roman",hjust=0.5)) + ylim(400,550)
+
+ggsave(plot_ed, file = "../output/graphs/nivel_educacional.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```
+# Estatus ocupacional
+```{r}
+plot_est <- ggplot(data1, aes(x=S_HISEI, y=PV1CIV)) +
+  geom_point(color="#535151") + 
+  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Estatus ocupacional Padre/Madre") + ylab("Conocimiento cívico") + ggtitle("CONOCIMIENTO CÍVICO, SEGÚN ESTATUS OCUPACIONAL DE LOS PADRES") + theme_classic() +
+    theme(plot.title = element_text(family="Times New Roman",hjust=0.5)) + xlim(20,100)
+
+plot_est
+ggsave(plot_est, file = "../output/graphs/estatus.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```
+
+#Libros en el hogar
+```{r}
+mean_cc <- mean(data1$PV1CIV)
+
+plotdata <- data1 %>%
+  group_by(S_HOMLIT) %>%
+  summarize(n = n(),
+         mean = mean(PV1CIV),
+         sd = sd(PV1CIV),
+         se = sd / sqrt(n),
+         ci = qt(0.99, df = n - 1) * sd / sqrt(n))
+
+plotdata$S_HOMLIT <- factor(plotdata$S_HOMLIT, levels = c(0,1,2,3,4), labels = c("0-10 libros","11-25 libros", "26-100 libros","101-200 libros", "Más de 200 libros"))
+plotdata<-na.omit(plotdata)
+
+plot_lib <- ggplot(plotdata, 
+       aes(x = S_HOMLIT, 
+           y = mean, 
+           group = 1)) +
+  geom_errorbar(aes(ymin = mean - se, 
+                    ymax = mean + se), 
+                width = .05, colour="grey50") +
+  geom_point(shape = 21, colour = "#5A5858", fill = "white", size = 1.8) +
+  geom_hline(yintercept = mean_cc,
+             color = "grey50",
+             linetype = "solid") + 
+  xlab("Número de libros en el hogar") + ylab("Conocimiento cívico")  + ggtitle("CONOCIMIENTO CÍVICO, SEGÚN LIBROS EN EL HOGAR") + theme_classic() +
+    theme(axis.title.x = element_text(hjust = 0.48),
+          axis.text.x = element_text(colour = "black", size = 10, angle = 45, hjust = 1),
+          plot.title = element_text(family="Times New Roman",hjust=0.5)) + ylim(400,550)
+
+ggsave(plot_lib, file = "../output/graphs/libros.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```
+
+#Interés político
+```{r}
+mean_cc <- mean(data1$PV1CIV)
+
+plotdata <- data1 %>%
+  group_by(S_HINT) %>%
+  summarize(n = n(),
+         mean = mean(PV1CIV),
+         sd = sd(PV1CIV),
+         se = sd / sqrt(n),
+         ci = qt(0.99, df = n - 1) * sd / sqrt(n))
+
+plotdata$S_HINT <- factor(plotdata$S_HINT, levels = c(0,1,2,3), labels = c("Nada interesado","No muy interesado", "Bastante interesado", "Muy interesado"))
+plotdata<-na.omit(plotdata)
+
+plot_intpol <- ggplot(plotdata, 
+       aes(x = S_HINT, 
+           y = mean, 
+           group = 1)) +
+  geom_errorbar(aes(ymin = mean - se, 
+                    ymax = mean + se), 
+                width = .05, colour="grey50") +
+  geom_point(shape = 21, colour = "#5A5858", fill = "white", size = 1.8) +
+  geom_hline(yintercept = mean_cc,
+             color = "grey50",
+             linetype = "solid") + 
+  xlab("Interés político familiar") + ylab("Conocimiento cívico")  + ggtitle("CONOCIMIENTO CÍVICO, SEGÚN INTERÉS POLÍTICO DE LOS PADRES") + theme_classic() +
+    theme(axis.title.x = element_text(hjust = 0.48),
+          axis.text.x = element_text(colour = "black", size = 10, angle = 45, hjust = 1),
+          plot.title = element_text(family="Times New Roman",hjust=0.5)) + ylim(400,550)
+
+ggsave(plot_intpol, file = "../output/graphs/intpol.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```

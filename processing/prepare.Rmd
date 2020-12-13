@@ -10,15 +10,22 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-library(haven)
-library(dplyr)
+pacman::p_load(haven,
+               sjPlot,
+               dplyr)
 iccs_simce <- read_dta("../input/data/original/iccs_simce.dta")
 
 data=iccs_simce %>% select(PV1CIV,S_CITEFF,S_POLDISC,S_SOCMED,L_AUTGOV,S_INTRUST,L_DISLAW,S_GENEQL,S_ETHRGHT,L_ATTDIV,S_ELECPART,S_LEGACT,S_ILLACT) %>% as.data.frame
-summary(data)
+#summary(data)
+
+data1=iccs_simce %>% select(PV1CIV,cod_depe2,S_HISCED,S_HISEI,S_HOMLIT,S_HINT) %>% as.data.frame
+#S_HISCED = nivel educativo más alto
+#S_HISEI = estatus ocupacional
+#S_HINT = interés político de los padres (más alto)
 ```
 
 ```{r}
 save(data, file= "../input/data/proc/data.Rdata")
+save(data1, file= "../input/data/proc/data1.Rdata")
 ```
 
