@@ -14,11 +14,36 @@ pacman::p_load(haven,
                sjPlot,
                dplyr)
 iccs_simce <- read_dta("../input/data/original/iccs_simce.dta")
+```
+# Indicadores agregados
+```{r}
+iccs_simce <- iccs_simce %>%
+group_by(idschool) %>%
+mutate(m_S_SOCMED = mean(S_SOCMED))
 
-data=iccs_simce %>% select(PV1CIV,S_CITEFF,S_POLDISC,S_SOCMED,L_AUTGOV,S_INTRUST,L_DISLAW,S_GENEQL,S_ETHRGHT,L_ATTDIV,S_ELECPART,S_LEGACT,S_ILLACT) %>% as.data.frame
+iccs_simce$S_HISCED2 <- ifelse((iccs_simce$S_HISCED==0), 1,
+                   ifelse((iccs_simce$S_HISCED==1), 2,                                 
+                          ifelse((iccs_simce$S_HISCED==2), 3,                                     
+                                 ifelse((iccs_simce$S_HISCED==3), 4,
+                                        ifelse((iccs_simce$S_HISCED==4), 5, NA)))))
+
+table(iccs_simce$S_HISCED)
+table(iccs_simce$S_HISCED2)
+
+iccs_simce <- iccs_simce %>%
+group_by(idschool) %>%
+mutate(m_S_HISCED = mean(S_HISCED2))
+
+iccs_simce <- iccs_simce %>%
+group_by(idschool) %>%
+mutate(m_PV1CIV = mean(PV1CIV))
+```
+
+```{r}
+data=iccs_simce %>% select(PV1CIV,S_CITEFF,S_POLDISC,m_S_SOCMED,S_SOCMED,L_AUTGOV,S_INTRUST,L_DISLAW,S_GENEQL,S_ETHRGHT,L_ATTDIV,S_ELECPART,S_LEGACT,S_ILLACT) %>% as.data.frame
 #summary(data)
 
-data1=iccs_simce %>% select(PV1CIV,cod_depe2,S_HISCED,S_HISEI,S_HOMLIT,S_HINT) %>% as.data.frame
+data1=iccs_simce %>% select(PV1CIV,m_PV1CIV,cod_depe2,S_HISCED,m_S_HISCED,S_HISEI,S_HOMLIT,S_HINT) %>% as.data.frame
 #S_HISCED = nivel educativo más alto
 #S_HISEI = estatus ocupacional
 #S_HINT = interés político de los padres (más alto)
