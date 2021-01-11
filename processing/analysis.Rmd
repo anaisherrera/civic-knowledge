@@ -28,8 +28,8 @@ set_theme(base = theme_classic(),
           legend.backgroundcol = "white")
 
 old <- theme_set(theme_classic())
-theme_update(plot.caption = element_text(size = 12),
-             text=element_text(size=12,  family="Calibri"))
+theme_update(plot.caption = element_text(size = 14),
+             text=element_text(size=14,  family="Calibri"))
 ```
 
 #1a.	Sentido de autoeficacia política 
@@ -145,20 +145,26 @@ ggsave(p4c, file = "../output/graphs/4c_partactilegal.png",device = "png",width 
 ```
 # Gráfico común
 ```{r message=FALSE, warning=FALSE}
-general <- cowplot::plot_grid(p1a,p1b,p1c,p2a,p2b,p2c,p3a,p3b,p3c,p4a,p4b,p4c, ncol=3)
-#ggsave(general, file = "../output/graphs/general.png",device = "png",width = 30,height = 30,dpi = "retina",units = "cm") #tamaño de letra 14
+general <- cowplot::plot_grid(p2a,p2b,p2c, ncol=3)
+ggsave(general, file = "../output/graphs/conf-inst.png",device = "png",width = 30,height = 10,dpi = "retina",units = "cm") 
+
+general <- cowplot::plot_grid(p3a,p3b,p3c, ncol=3)
+ggsave(general, file = "../output/graphs/tolerancia.png",device = "png",width = 30,height = 10,dpi = "retina",units = "cm") 
+
+general <- cowplot::plot_grid(p4a,p4b,p4c, ncol=3)
+ggsave(general, file = "../output/graphs/participacion.png",device = "png",width = 30,height = 10,dpi = "retina",units = "cm") 
 ```
 
 ```{r}
-ggsave(plot = plot_grid(list(p1a,p1b,p1c,p2a,p2b,p2c,p3a,p3b,p3c,p4a,p4b,p4c),
-                        margin = c(0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4), 
-                        tags = c(" ", " ", " ", " ", " ", " "," ", " ", " ", " ", " ", " ")),
-       filename = "../output/graphs/general2.png", width = 11, height = 10, dpi= "retina")
+ggsave(plot = plot_grid(list(p2a,p2b,p2c,p3a,p3b,p3c,p4a,p4b,p4c),
+                        margin = c(0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4), 
+                        tags = c(" ", " ", " "," ", " ", " ", " ", " ", " ")),
+       filename = "../output/graphs/general-act.png", width = 11, height = 10, dpi= "retina")
 
-ggsave(plot = plot_grid(list(p1a,p1b,p1c,p2a,p2b,p2c,p3a,p3b,p3c,p4a,p4b,p4c),
-                        margin = c(0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6), 
-                        tags = c(" ", " ", " ", " ", " ", " "," ", " ", " ", " ", " ", " ")),
-       filename = "../output/graphs/general2.png", width = 11, height = 10, dpi= "retina")
+#ggsave(plot = plot_grid(list(p2a,p2b,p2c,p3a,p3b,p3c,p4a,p4b,p4c),
+ #                       margin = c(0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6), 
+  #                      tags = c(" ", " ", " ", " ", " ", " "," ", " ", " ", " ", " ", " ")),
+  #     filename = "../output/graphs/general2.png", width = 11, height = 10, dpi= "retina")
 ```
 
 #Nivel educativo
@@ -310,4 +316,155 @@ plot_ed_dep
 
 ggsave(plot_ed_dep, file = "../output/graphs/ed_dep_ccivico.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
 ```
+# Apertura a la discusión en el aula
+```{r}
+plot_est <- ggplot(data1, aes(x=S_OPDISC, y=PV1CIV)) +
+  geom_point(color="#535151") + 
+  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Apertura a la discusión en el aula") + ylab("Conocimiento cívico (PV1)") + ggtitle("CONOCIMIENTO CÍVICO, SEGÚN APERTURA
+A LA DISCUSIÓN EN EL AULA") + theme_classic() +
+    theme(plot.title = element_text(family="Times New Roman",hjust=0.5)) + xlim(20,100)
 
+plot_est
+ggsave(plot_est, file = "../output/graphs/ap_disc.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```
+#Uso de internet para informarse
+```{r}
+mean_cc <- mean(data1$PV1CIV)
+
+plotdata <- data1 %>%
+  group_by(IS3G14G) %>%
+  summarize(n = n(),
+         mean = mean(PV1CIV),
+         sd = sd(PV1CIV),
+         se = sd / sqrt(n),
+         ci = qt(0.99, df = n - 1) * sd / sqrt(n))
+
+plotdata$IS3G14G <- factor(plotdata$IS3G14G, levels = c(1,2,3,4), labels = c("Nunca o 
+casi nunca","Mensualmente", "Semanalmente", "Diariamente o
+casi a diario"))
+plotdata<-na.omit(plotdata)
+
+plot_intpol <- ggplot(plotdata, 
+       aes(x = IS3G14G, 
+           y = mean, 
+           group = 1)) +
+  geom_errorbar(aes(ymin = mean - se, 
+                    ymax = mean + se), 
+                width = .05, colour="grey50") +
+  geom_point(shape = 21, colour = "#5A5858", fill = "white", size = 1.8) +
+  geom_hline(yintercept = mean_cc,
+             color = "grey50",
+             linetype = "solid") + 
+  xlab("Uso de internet para buscar información sobre temas políticos o sociales") + ylab("Conocimiento cívico (PV1)")  + ggtitle("CONOCIMIENTO CÍVICO, SEGÚN FRECUENCIA DE USO DE INTERNET PARA
+BUSCAR INFORMACIÓN SOBRE TEMAS POLÍTICOS O SOCIALES") + theme_classic() +
+    theme(axis.title.x = element_text(hjust = 0.48),
+          axis.text.x = element_text(colour = "black", size = 10, angle = 45, hjust = 1),
+          plot.title = element_text(family="Times New Roman",hjust=0.5)) + ylim(400,550)
+
+ggsave(plot_intpol, file = "../output/graphs/info-int.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```
+#Ver televisión para informarse
+```{r}
+mean_cc <- mean(data1$PV1CIV)
+
+plotdata <- data1 %>%
+  group_by(IS3G14B) %>%
+  summarize(n = n(),
+         mean = mean(PV1CIV),
+         sd = sd(PV1CIV),
+         se = sd / sqrt(n),
+         ci = qt(0.99, df = n - 1) * sd / sqrt(n))
+
+plotdata$IS3G14B <- factor(plotdata$IS3G14B, levels = c(1,2,3,4), labels = c("Nunca o 
+casi nunca","Mensualmente", "Semanalmente", "Diariamente o
+casi a diario"))
+plotdata<-na.omit(plotdata)
+
+plot_intpol <- ggplot(plotdata, 
+       aes(x = IS3G14B, 
+           y = mean, 
+           group = 1)) +
+  geom_errorbar(aes(ymin = mean - se, 
+                    ymax = mean + se), 
+                width = .05, colour="grey50") +
+  geom_point(shape = 21, colour = "#5A5858", fill = "white", size = 1.8) +
+  geom_hline(yintercept = mean_cc,
+             color = "grey50",
+             linetype = "solid") + 
+ xlab("Ver televisión para informarse sobre las noticias nacionales e internacionales") + ylab("Conocimiento cívico (PV1)")  + ggtitle("CONOCIMIENTO CÍVICO, SEGÚN FRECUENCIA EN QUE VE TELEVISIÓN PARA
+INFORMARSE SOBRE NOTICIAS NACIONALES E INTERNACIONALES") + theme_classic() +
+    theme(axis.title.x = element_text(hjust = 0.48),
+          axis.text.x = element_text(colour = "black", size = 10, angle = 45, hjust = 1),
+          plot.title = element_text(family="Times New Roman",hjust=0.5)) + ylim(400,550)
+
+ggsave(plot_intpol, file = "../output/graphs/info-tv.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```
+#Leer el periódico para informarse
+```{r}
+mean_cc <- mean(data1$PV1CIV)
+
+plotdata <- data1 %>%
+  group_by(IS3G14C) %>%
+  summarize(n = n(),
+         mean = mean(PV1CIV),
+         sd = sd(PV1CIV),
+         se = sd / sqrt(n),
+         ci = qt(0.99, df = n - 1) * sd / sqrt(n))
+
+plotdata$IS3G14C <- factor(plotdata$IS3G14C, levels = c(1,2,3,4), labels = c("Nunca o 
+casi nunca","Mensualmente", "Semanalmente", "Diariamente o
+casi a diario"))
+plotdata<-na.omit(plotdata)
+
+plot_intpol <- ggplot(plotdata, 
+       aes(x = IS3G14C, 
+           y = mean, 
+           group = 1)) +
+  geom_errorbar(aes(ymin = mean - se, 
+                    ymax = mean + se), 
+                width = .05, colour="grey50") +
+  geom_point(shape = 21, colour = "#5A5858", fill = "white", size = 1.8) +
+  geom_hline(yintercept = mean_cc,
+             color = "grey50",
+             linetype = "solid") + 
+  xlab("Leer el periódico para informarse sobre las noticias nacionales e internacionales") + ylab("Conocimiento cívico (PV1)")  + ggtitle("CONOCIMIENTO CÍVICO, SEGÚN FRECUENCIA EN QUE LEE EL PERIÓDICO PARA
+INFORMARSE SOBRE NOTICIAS NACIONALES E INTERNACIONALES") + theme_classic() +
+    theme(axis.title.x = element_text(hjust = 0.48),
+          axis.text.x = element_text(colour = "black", size = 10, angle = 45, hjust = 1),
+          plot.title = element_text(family="Times New Roman",hjust=0.5)) + ylim(400,550)
+
+ggsave(plot_intpol, file = "../output/graphs/info-per.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```
+#Género
+```{r}
+mean_cc <- mean(data1$PV1CIV)
+
+plotdata <- data1 %>%
+  group_by(S_GENDER) %>%
+  summarize(n = n(),
+         mean = mean(PV1CIV),
+         sd = sd(PV1CIV),
+         se = sd / sqrt(n),
+         ci = qt(0.99, df = n - 1) * sd / sqrt(n))
+
+plotdata$S_GENDER <- factor(plotdata$S_GENDER, levels = c(0,1), labels = c("Niño", "Niña"))
+plotdata<-na.omit(plotdata)
+
+plot_intpol <- ggplot(plotdata, 
+       aes(x = S_GENDER, 
+           y = mean, 
+           group = 1)) +
+  geom_errorbar(aes(ymin = mean - se, 
+                    ymax = mean + se), 
+                width = .05, colour="grey50") +
+  geom_point(shape = 21, colour = "#5A5858", fill = "white", size = 1.8) +
+  geom_hline(yintercept = mean_cc,
+             color = "grey50",
+             linetype = "solid") + 
+  xlab("Género") + ylab("Conocimiento cívico (PV1)")  + ggtitle("CONOCIMIENTO CÍVICO, SEGÚN GÉNERO") + theme_classic() +
+    theme(axis.title.x = element_text(hjust = 0.48),
+          axis.text.x = element_text(colour = "black", size = 10, angle = 45, hjust = 1),
+          plot.title = element_text(family="Times New Roman",hjust=0.5)) + ylim(400,550)
+
+ggsave(plot_intpol, file = "../output/graphs/genero.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```

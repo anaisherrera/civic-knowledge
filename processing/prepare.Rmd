@@ -43,10 +43,14 @@ mutate(m_PV1CIV = mean(PV1CIV))
 data=iccs_simce %>% select(PV1CIV,S_CITEFF,S_POLDISC,m_S_SOCMED,S_SOCMED,L_AUTGOV,S_INTRUST,L_DISLAW,S_GENEQL,S_ETHRGHT,L_ATTDIV,S_ELECPART,S_LEGACT,S_ILLACT) %>% as.data.frame
 #summary(data)
 
-data1=iccs_simce %>% select(PV1CIV,m_PV1CIV,cod_depe2,S_HISCED,m_S_HISCED,S_HISEI,S_HOMLIT,S_HINT) %>% as.data.frame
+data1=iccs_simce %>% select(PV1CIV,m_PV1CIV,cod_depe2,S_HISCED,m_S_HISCED,S_HISEI,S_HOMLIT,S_HINT,IS3G14G,IS3G14B,IS3G14C,S_OPDISC,S_GENDER) %>% as.data.frame
 #S_HISCED = nivel educativo más alto
 #S_HISEI = estatus ocupacional
 #S_HINT = interés político de los padres (más alto)
+#IS3G14G = uso de redes sociales para encontrar información sobre temas políticos o sociales
+#IS3G14B = ver televisión para informarse
+#IS3G14C = leer el periódico para informarse
+#S_GENDER = género (1=mujer, 0=hombre)
 ```
 
 ```{r}
