@@ -15,6 +15,7 @@ pacman::p_load(ggplot2,
                dplyr)
 load(file= "../input/data/proc/data.Rdata")
 load(file= "../input/data/proc/data1.Rdata")
+load(file= "../input/data/proc/data2009.Rdata")
 ```
 
 ```{r}
@@ -297,13 +298,14 @@ CONOCIMIENTO CÍVICO SEGÚN ICCS 2016") + theme_classic() +
 ggsave(plot_dep, file = "../output/graphs/dependencia.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
 ```
 
-# Nivel educativo, tipo de dependencia y conocimiento cívico
+# Nivel educativo, tipo de dependencia y conocimiento cívico, 2016
 ```{r}
 mean_cc <- mean(data1$PV1CIV)
 
 plot_ed_dep <- ggplot(data1, aes(m_S_HISCED, m_PV1CIV, shape = factor(cod_depe2a))) + geom_point(aes(colour = factor(cod_depe2a)), size = 3) + xlab("Promedio educación de padres, por escuela") + ylab("Promedio conocimiento cívico, por escuela") + xlim(1,5) + ggtitle("PROMEDIO DE EDUCACIÓN DE LOS PADRES POR 
 DEPENDENCIA ADMINISTRATIVA DE LA 
-ESCUELA Y CONOCIMIENTO CÍVICO") +
+ESCUELA Y CONOCIMIENTO CÍVICO
+2016") +
   geom_hline(yintercept = mean_cc,
              color = "grey50",
              linetype = "solid")+
@@ -314,7 +316,29 @@ ESCUELA Y CONOCIMIENTO CÍVICO") +
           legend.title = element_blank()) + scale_color_grey()
 plot_ed_dep
 
-ggsave(plot_ed_dep, file = "../output/graphs/ed_dep_ccivico.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+ggsave(plot_ed_dep, file = "../output/graphs/ed_dep_ccivico2016.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```
+# Nivel educativo, tipo de dependencia y conocimiento cívico, 2009
+```{r}
+data2009$IDSTRATEa <- factor(data2009$IDSTRATE, levels = c(1,2,3), labels = c("Municipal", "Subvencionado", "Privado"))
+
+mean_cc <- mean(data2009$PV1CIV)
+
+plot_ed_dep <- ggplot(data2009, aes(m_S_HISCED, m_PV1CIV, shape = factor(IDSTRATEa))) + geom_point(aes(colour = factor(IDSTRATEa)), size = 3) + xlab("Promedio educación de padres, por escuela") + ylab("Promedio conocimiento cívico, por escuela") + xlim(1,5) + ggtitle("PROMEDIO DE EDUCACIÓN DE LOS PADRES POR 
+DEPENDENCIA ADMINISTRATIVA DE LA 
+ESCUELA Y CONOCIMIENTO CÍVICO
+2009") +
+  geom_hline(yintercept = mean_cc,
+             color = "grey50",
+             linetype = "solid")+
+    theme(axis.title.x = element_text(hjust = 0.48),
+          axis.text.x = element_text(colour = "black", size = 10, hjust = 0.5),
+          plot.title = element_text(family="Times New Roman",hjust=0.5),
+          legend.position = ("bottom"),
+          legend.title = element_blank()) + scale_color_grey()
+plot_ed_dep
+
+ggsave(plot_ed_dep, file = "../output/graphs/ed_dep_ccivico2009.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
 ```
 # Apertura a la discusión en el aula
 ```{r}

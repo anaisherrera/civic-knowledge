@@ -14,9 +14,17 @@ pacman::p_load(haven,
                sjPlot,
                dplyr)
 iccs_simce <- read_dta("../input/data/original/iccs_simce.dta")
+iccs_2009esc <- read_sav("../input/data/original/ICGCHLC2.sav")
+iccs_2009est <- read_sav("../input/data/original/ISGCHLC2.sav")
+
+data2009esc=iccs_2009esc %>% select(IDSCHOOL,IDSTRATE) %>% as.data.frame
+data2009est=iccs_2009est %>% select(IDSCHOOL,PV1CIV,HISCED) %>% as.data.frame
+iccs_2009 <- merge(data2009esc,data2009est, by="IDSCHOOL")
 ```
+
 # Indicadores agregados
 ```{r}
+# ICCS 2016
 iccs_simce <- iccs_simce %>%
 group_by(idschool) %>%
 mutate(m_S_SOCMED = mean(S_SOCMED))
@@ -37,7 +45,34 @@ mutate(m_S_HISCED = mean(S_HISCED2))
 iccs_simce <- iccs_simce %>%
 group_by(idschool) %>%
 mutate(m_PV1CIV = mean(PV1CIV))
+
+# ICCS 2009
+iccs_2009$S_HISCED2 <- ifelse((iccs_2009$HISCED==0), 1,
+                   ifelse((iccs_2009$HISCED==1), 1,
+                          ifelse((iccs_2009$HISCED==2), 2,                                 
+                          ifelse((iccs_2009$HISCED==3), 3,                                
+                                 ifelse((iccs_2009$HISCED==4), 4,
+                                        ifelse((iccs_2009$HISCED==5), 5, NA))))))
+
+table(iccs_2009$S_HISCED)
+table(iccs_2009$S_HISCED2)
+
+iccs_2009 <- iccs_2009 %>%
+group_by(IDSCHOOL) %>%
+mutate(m_S_HISCED = mean(S_HISCED2))
+
+iccs_2009 <- iccs_2009 %>%
+group_by(IDSCHOOL) %>%
+mutate(m_PV1CIV = mean(PV1CIV))
+
 ```
+# Recodificación valores dependencia educativa
+```{r}
+iccs_2009$IDSTRATE <- ifelse((iccs_2009$IDSTRATE==1), 1,
+                   ifelse((iccs_2009$IDSTRATE==2), 3,                                 
+                          ifelse((iccs_2009$IDSTRATE==3), 2, NA)))
+```
+
 
 ```{r}
 data=iccs_simce %>% select(PV1CIV,S_CITEFF,S_POLDISC,m_S_SOCMED,S_SOCMED,L_AUTGOV,S_INTRUST,L_DISLAW,S_GENEQL,S_ETHRGHT,L_ATTDIV,S_ELECPART,S_LEGACT,S_ILLACT) %>% as.data.frame
@@ -51,10 +86,13 @@ data1=iccs_simce %>% select(PV1CIV,m_PV1CIV,cod_depe2,S_HISCED,m_S_HISCED,S_HISE
 #IS3G14B = ver televisión para informarse
 #IS3G14C = leer el periódico para informarse
 #S_GENDER = género (1=mujer, 0=hombre)
+
+data2009 = iccs_2009 %>% select(PV1CIV,m_PV1CIV,m_S_HISCED,IDSTRATE) %>% as.data.frame
 ```
 
 ```{r}
 save(data, file= "../input/data/proc/data.Rdata")
 save(data1, file= "../input/data/proc/data1.Rdata")
+save(data2009, file= "../input/data/proc/data2009.Rdata")
 ```
 
