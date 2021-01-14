@@ -70,7 +70,7 @@ ggsave(p1c2, file = "../output/graphs/1c_internet_centrado.png",device = "png",w
 ```{r}
 p2a <- ggplot(data, aes(x=PV1CIV, y=L_AUTGOV)) +
   geom_point(color="#535151") +
-  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Creencias autoritarias")
+  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Creencias autoritarias") + ylim(20,80)
 p2a
 ggsave(p2a, file = "../output/graphs/2a_autoritarias.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
 ```
@@ -78,7 +78,7 @@ ggsave(p2a, file = "../output/graphs/2a_autoritarias.png",device = "png",width =
 ```{r}
 p2b <- ggplot(data, aes(x=PV1CIV, y=S_INTRUST)) +
   geom_point(color="#535151") +
-  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Confianza en instituciones")
+  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Confianza en instituciones") + ylim(20,80)
 p2b
 ggsave(p2b, file = "../output/graphs/2b_confianza.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
 ```
@@ -87,7 +87,7 @@ ggsave(p2b, file = "../output/graphs/2b_confianza.png",device = "png",width = 20
 ```{r}
 p2c <- ggplot(data, aes(x=PV1CIV, y=L_DISLAW)) +
   geom_point(color="#535151") + #787878
-  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Desobediencia a la ley")#69b3a2 - DEDEDE -B8B4B4
+  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Desobediencia a la ley")+ ylim(20,80)#69b3a2 - DEDEDE -B8B4B4
 p2c
 ggsave(p2c, file = "../output/graphs/2c_desobediencia.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
 ```
