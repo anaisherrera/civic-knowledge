@@ -290,10 +290,7 @@ ggsave(plot_dep, file = "../output/graphs/dependencia.png",device = "png",width 
 ```{r}
 mean_cc <- mean(data1$PV1CIV)
 
-plot_ed_dep16 <- ggplot(data1, aes(m_S_HISCED, m_PV1CIV, shape = factor(cod_depe2a))) + geom_point(aes(colour = factor(cod_depe2a)), size = 3) + xlab("Promedio educación de padres, por escuela") + ylab("Promedio conocimiento cívico, por escuela") + ylim(300,650)+ xlim(1,5) + ggtitle("PROMEDIO DE EDUCACIÓN DE LOS PADRES POR 
-DEPENDENCIA ADMINISTRATIVA DE LA 
-ESCUELA Y CONOCIMIENTO CÍVICO
-2016") +
+plot_ed_dep16 <- ggplot(data1, aes(m_S_HISCED, m_PV1CIV, shape = factor(cod_depe2a))) + geom_point(aes(colour = factor(cod_depe2a)), size = 3) + xlab("Promedio educación de padres, por escuela") + ylab("Promedio conocimiento cívico, por escuela") + ylim(300,650)+ xlim(1,5) + ggtitle("2016") +
   geom_hline(yintercept = mean_cc,
              color = "grey50",
              linetype = "solid")+
@@ -312,10 +309,7 @@ data2009$IDSTRATEa <- factor(data2009$IDSTRATE, levels = c(1,2,3), labels = c("M
 
 mean_cc <- mean(data2009$PV1CIV)
 
-plot_ed_dep09 <- ggplot(data2009, aes(m_S_HISCED, m_PV1CIV, shape = factor(IDSTRATEa))) + geom_point(aes(colour = factor(IDSTRATEa)), size = 3) + xlab("Promedio educación de padres, por escuela") + ylab("Promedio conocimiento cívico, por escuela") + ylim(300,650) + xlim(1,5) + ggtitle("PROMEDIO DE EDUCACIÓN DE LOS PADRES POR 
-DEPENDENCIA ADMINISTRATIVA DE LA 
-ESCUELA Y CONOCIMIENTO CÍVICO
-2009") +
+plot_ed_dep09 <- ggplot(data2009, aes(m_S_HISCED, m_PV1CIV, shape = factor(IDSTRATEa))) + geom_point(aes(colour = factor(IDSTRATEa)), size = 3) + xlab("Promedio educación de padres, por escuela") + ylab("Promedio conocimiento cívico, por escuela") + ylim(300,650) + xlim(1,5) + ggtitle("2009") +
   geom_hline(yintercept = mean_cc,
              color = "grey50",
              linetype = "solid")+
@@ -330,11 +324,11 @@ ggsave(plot_ed_dep09, file = "../output/graphs/ed_dep_ccivico2009.png",device = 
 ```
 # Gráfico comparativo: Nivel educativo, tipo de dependencia y conocimiento cívico 2009-2016
 ```{r message=FALSE, warning=FALSE}
-general <- cowplot::plot_grid(plot_ed_dep09,plot_ed_dep16, ncol=2)
-ggsave(general, file = "../output/graphs/ed_dep_ccivico_comp.png",device = "png",width = 30,height = 20,dpi = "retina",units = "cm") 
+#general <- cowplot::plot_grid(plot_ed_dep09,plot_ed_dep16, ncol=2)
+#ggsave(general, file = "../output/graphs/ed_dep_ccivico_comp.png",device = "png",width = 40,height = 26,dpi = "retina",units = "cm") 
 
-general <- cowplot::plot_grid(plot_ed_dep09,plot_ed_dep16, ncol=1)
-ggsave(general, file = "../output/graphs/ed_dep_ccivico_comp2.png",device = "png",width = 26,height = 40,dpi = "retina",units = "cm") 
+#general <- cowplot::plot_grid(plot_ed_dep09,plot_ed_dep16, ncol=1)
+#ggsave(general, file = "../output/graphs/ed_dep_ccivico_comp2.png",device = "png",width = 20,height = 30,dpi = "retina",units = "cm") 
 ```
 # Apertura a la discusión en el aula
 ```{r}
