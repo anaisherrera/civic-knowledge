@@ -119,28 +119,37 @@ p3c
 ggsave(p3c, file = "../output/graphs/3c_diversidad.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
 ```
 
-#4a. Disposición a la participación electoral
+#3d. Actitudes hacia la igualdad con grupos étnicos
+```{r}
+p3d <- ggplot(data, aes(x=PV1CIV, y=L_ATTHS)) +
+  geom_point(color="#535151") + 
+  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Igualdad para homosexuales")
+p3d
+ggsave(p3d, file = "../output/graphs/3d_etnicos.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
+```
+
+#4a. Disposición a la participación formal
 ```{r}
 p4a <- ggplot(data, aes(x=PV1CIV, y=S_ELECPART)) +
   geom_point(color="#535151") + 
-  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Participación en elecciones")  + ylim(20,80)
+  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Participación formal")  + ylim(20,80)
 p4a
 ggsave(p4a, file = "../output/graphs/4a_partelectoral.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
 ```
 
-#4b. Disposición a la participación en actividades legales
+#4b. Disposición a la participación activista no disruptiva
 ```{r}
 p4b <- ggplot(data, aes(x=PV1CIV, y=S_LEGACT)) +
   geom_point(color="#535151") + 
-  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Participación en actividades legales")
+  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Participación activista no disruptiva")
 p4b
 ggsave(p4b, file = "../output/graphs/4b_partactlegal.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
 ```
-#4c. Disposición a la participación en actividades ilegales
+#4c. Disposición a la participación activista disruptiva
 ```{r}
 p4c <- ggplot(data, aes(x=PV1CIV, y=S_ILLACT)) +
   geom_point(color="#535151") + 
-  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Participación en actividades ilegales") + ylim(20,80)
+  geom_smooth(method=lm, color="#000000", fill="#D1CACA", se=TRUE) + xlab("Conocimiento cívico") + ylab("Participación activista disruptiva") + ylim(20,80)
 p4c
 ggsave(p4c, file = "../output/graphs/4c_partactilegal.png",device = "png",width = 20,height = 13,dpi = "retina",units = "cm")
 ```
@@ -151,6 +160,9 @@ ggsave(general, file = "../output/graphs/conf-inst.png",device = "png",width = 3
 
 general <- cowplot::plot_grid(p3a,p3b,p3c, ncol=3)
 ggsave(general, file = "../output/graphs/tolerancia.png",device = "png",width = 30,height = 10,dpi = "retina",units = "cm") 
+
+general <- cowplot::plot_grid(p3a,p3b,p3d, ncol=3)
+ggsave(general, file = "../output/graphs/tolerancia2.png",device = "png",width = 30,height = 10,dpi = "retina",units = "cm") 
 
 general <- cowplot::plot_grid(p4a,p4b,p4c, ncol=3)
 ggsave(general, file = "../output/graphs/participacion.png",device = "png",width = 30,height = 10,dpi = "retina",units = "cm") 
